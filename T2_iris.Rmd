@@ -1,0 +1,96 @@
+?FactoMineR
+FactoMineR::PCA(X = iris_,scale.unit = T)
+library(FactoMineR)
+
+head(iris)
+
+iris_val <- iris[1:4]
+iris_esp <- iris[5]
+
+algo <- PCA(X=iris_val,scale.unit = T,graph = F,ncp = 2, axes = 2)
+algo$eig
+
+
+#######################################################
+#Tutorial in Exploratory Data Analysis (useR!2008, Dormundt August 10th 2008)
+#######################################################
+
+###############################
+# Principal Component Analysis
+###############################
+
+#############
+#Exercices
+#############
+
+mat=matrix(rnorm(7*200,0,1),ncol=200)
+PCA(mat)
+
+#############
+#Percentage of variance obtained under independence
+#############
+nr=50
+nc=8
+iner=rep(0,1000)
+for (i in 1:1000)
+{
+  mat=matrix(rnorm(nr*nc,0,1),ncol=nc)
+  iner[i]=PCA(mat,graph=F)$eig[2,3]
+}
+quantile(iner,0.95)
+
+########################
+# PCA on decathlon data
+########################
+library(FactoMineR)
+data(decathlon)
+res <- PCA(decathlon,quanti.sup=11:12,quali.sup=13)
+
+plot(res,invisible="quali")
+plot(res,choix="var",invisible="quanti.sup")
+plot(res,habillage=13)
+
+aa=cbind.data.frame(decathlon[,13],res$ind$coord)
+bb=coord.ellipse(aa,bary=TRUE)
+plot.PCA(res,habillage=13,ellipse=bb)
+
+res$eig
+x11()
+barplot(res$eig[,1],main="Eigenvalues",names.arg=1:nrow(res$eig))
+res$ind$coord
+res$ind$cos2
+res$ind$contrib
+
+dimdesc(res)
+
+#write.infile(res,file="my_FactoMineR_results.csv") #to export a list
+#######################
+# PCA on chicken data
+#######################
+
+library(FactoMineR)
+poulet = read.table("poulet3.txt",header=T,sep="\t",dec=".",row.names=1)
+dim(poulet)
+poulet=as.data.frame(t(poulet))
+poulet = cbind.data.frame(as.factor(c(rep("N",6),rep("J16",5),rep("J16R5",8),rep("J16R16",9),rep("J48",6),rep("J48R24",9))),poulet)
+colnames(poulet)[1] = "Régime"
+res.pca = PCA(poulet,quali.sup=1, graph=F)
+
+plot(res.pca,habillage=1)
+plot(res.pca,choix="var",lim.cos2.var=0.75)
+dimdesc(res.pca,proba=1e-5)
+
+aa=cbind.data.frame(poulet[,1],res.pca$ind$coord)
+bb=coord.ellipse(aa,bary=TRUE)
+plot.PCA(res.pca,habillage=1,ellipse=bb)
+
+plot(res.pca,habillage=1, axes=3:4)
+aa <- cbind.data.frame(poulet[,1], res.pca$ind$coord[,3:4])
+bb <- coord.ellipse(aa,bary=TRUE)
+plot.PCA(res.pca,habillage=1,ellipse=bb, axes=3:4)
+
+
+
+
+
+

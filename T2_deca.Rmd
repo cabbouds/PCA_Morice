@@ -1,0 +1,4 @@
+library(FactoMineR)
+data(decathlon)
+
+View(decathlon)

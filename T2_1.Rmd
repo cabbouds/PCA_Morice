@@ -1,0 +1,61 @@
+---
+title: "T_2_1.Rmd"
+author: "Isabel, Raúl, Ollin y Camilo"
+date: "January 30, 2017"
+output: html_document
+---
+View(data)
+
+```{r echo=FALSE,warning=FALSE,error=FALSE,include=FALSE}
+#install.packages('tidyverse')
+library(FactoMineR)
+library(Rcmdr)
+library(tidyverse)
+```
+```{r echo=FALSE}
+data_orig<-read.csv("./cwurData.csv")
+```
+
+![](./logo_intro.png) 
+
+### PCA: Definición y Métricas Relevantes
+
+El PCA es un método para reducir dimensiones de un conjunto de datos.
+
+Técnicamente, el PCA busca la proyección según la cual los datos queden mejor representados en términos de mínimos cuadrados. Esta convierte un conjunto de observaciones de variables posiblemente correlacionadas en un conjunto de valores de variables sin correlación lineal llamadas componentes principales.[2]
+
+
+### Descripción de la data
+
+
+- Rank Universidades
+- Se eliminaron las columnas: rank nacional, país
+- Se conservó la data para 2015 únicamente
+View(data)
+```{r echo=F}
+data <- data_orig[-3]
+data <- data[data$year==2015,]
+#row.names(data)=data$institution
+data <- data[-2]
+data <- data[-2]
+data <- data[-dim(data)[2]]
+PeCA<-PCA(data, scale.unit=T, graph=T,quanti.sup=c(1,10))
+#plot.PCA(PeCA, choix="var",title = "Camilo es chido")
+#View(data)
+```
+
+
+```{r}
+scatterplot(data_orig$score,data_orig$world_rank)
+?scatterplot
+```
+```{r}
+summary(PeCA)
+```
+
+
+
+##### Fuentes
+
+-https://es.wikipedia.org/wiki/An%C3%A1lisis_de_componentes_principales
+- http://factominer.free.fr/

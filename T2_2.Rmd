@@ -1,0 +1,16 @@
+---
+title: "T2_2"
+author: "cas"
+date: "February 1, 2017"
+output: pdf_document
+---
+install.packages("FactoMineR")
+install.packages("Rcmdr")
+
+library(FactoMineR)
+library(Rcmdr)
+
+data(iris)
+head(iris, 3)
+
+FactorMineR::
