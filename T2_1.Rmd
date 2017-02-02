@@ -1,16 +1,15 @@
 ---
-title: "T_2_1.Rmd"
+title: "PCA con FactorMineR"
 author: "Isabel, Raúl, Ollin y Camilo"
-date: "January 30, 2017"
 output: html_document
 ---
-View(data)
 
 ```{r echo=FALSE,warning=FALSE,error=FALSE,include=FALSE}
 #install.packages('tidyverse')
 library(FactoMineR)
 library(Rcmdr)
 library(tidyverse)
+library(knitr)
 ```
 ```{r echo=FALSE}
 data_orig<-read.csv("./cwurData.csv")
@@ -18,20 +17,53 @@ data_orig<-read.csv("./cwurData.csv")
 
 ![](./logo_intro.png) 
 
-### PCA: Definición y Métricas Relevantes
+### I. PCA: Análisis de Componentes Principales
 
 El PCA es un método para reducir dimensiones de un conjunto de datos.
 
 Técnicamente, el PCA busca la proyección según la cual los datos queden mejor representados en términos de mínimos cuadrados. Esta convierte un conjunto de observaciones de variables posiblemente correlacionadas en un conjunto de valores de variables sin correlación lineal llamadas componentes principales.[2]
 
+http://setosa.io/ev/principal-component-analysis/
 
-### Descripción de la data
+### II. Métricas Relevantes
+
+- Eigenvalores
+- Eigenvectroes
+- Matriz de Covarianza
+- $Cos^2(x_k,x_{l})$
+
+![](./PCA_Morice/graham2.png)
+
+### III. FactoMineR: Package
+
+*Descripción:* FactoMineR es un paquete de R dedicado a análisis exploratorio de datos multivariado. 
+Desarrollado y mantenido por F. Husson entre otros.
+
+![](./PCA_Morice/R_PCA_1.png)
+
+*Página:* http://factominer.free.fr/
+
+Realiza varios métdos clásicos como:
+
+  * Principal Components Analysis (PCA) 
+  * Correspondence analysis (CA)
+  * Multiple Correspondence Analysis (MCA) 
+  * Otros Métodos Avanzados
+  * Información/Variables suplementarias 
 
 
-- Rank Universidades
-- Se eliminaron las columnas: rank nacional, país
-- Se conservó la data para 2015 únicamente
-View(data)
+### Ejemplo: Ranking de Universidades
+
+- Se eliminaron las columnas: rank nacional y país
+- Individuos son universidades
+- Se conservó la data para 2015
+- Las variables numéricas son: 
+
+```{r echo=FALSE}
+kable(names(data_orig),format = "html")
+```
+
+A co
 ```{r echo=F}
 data <- data_orig[-3]
 data <- data[data$year==2015,]
@@ -39,21 +71,25 @@ data <- data[data$year==2015,]
 data <- data[-2]
 data <- data[-2]
 data <- data[-dim(data)[2]]
-PeCA<-PCA(data, scale.unit=T, graph=T,quanti.sup=c(1,10))
-#plot.PCA(PeCA, choix="var",title = "Camilo es chido")
-#View(data)
+PeCA<-PCA(data, scale.unit=T, graph=F,quanti.sup=c(1,10))
+par(mfrow=c(1,2))
+plot.PCA(PeCA, choix="var", axes = c(1,2))
+plot.PCA(PeCA, choix="var", axes = c(3,5))
+#par(mfrow=c(1,2))
 ```
 
 
 ```{r}
-scatterplot(data_orig$score,data_orig$world_rank)
-?scatterplot
+par(mfrow=c(1,2))
+plot.PCA(PeCA, choix="ind",label = "none",axes = c(1,2))
+plot.PCA(PeCA, choix="ind",label = "none",axes = c(3,5))
 ```
+
+
+
 ```{r}
 summary(PeCA)
 ```
-
-
 
 ##### Fuentes
 
